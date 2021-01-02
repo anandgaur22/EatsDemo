@@ -98,6 +98,47 @@ class ApiController extends Controller
    
     }
 
+    public  function userUpdate(Request $request)
+    {
+        
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required',
+            'mobile_no' => 'required',
+            'user_id' => 'required'
+       ]);
+           
+       if ($validator->fails()) {
+          return response()->json(["status" =>"false","message" =>"Enter all field required first"],404);
+     }
+
+        $userRegister = UserRegister::where('user_id', $request->user_id)->first();
+
+        UserRegister::where('user_id', $request->user_id)->update(['name' => 
+        $request->name,'email' => $request->email,'mobile_no' => $request->mobile_no]);
+
+        return response()->json(["status" =>"true","message" =>"Your profile update successfully","data" =>$userRegister->only(['user_id','name', 'email', 'mobile_no'])],200);
+   
+    }
+
+
+    public  function getuserDetail(Request $request)
+    {
+        
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required'
+       ]);
+           
+       if ($validator->fails()) {
+          return response()->json(["status" =>"false","message" =>"Enter all field required first"],404);
+     }
+
+        $userRegister = UserRegister::where('user_id', $request->user_id)->first();
+
+    
+        return response()->json(["status" =>"true","message" =>"Profile fetch successfully","data" =>$userRegister->only(['user_id','name', 'email', 'mobile_no'])],200);
+   
+    }
 
 
 
